@@ -1,0 +1,1 @@
+docker build -t rust-cli-boilerplate:$1 .
