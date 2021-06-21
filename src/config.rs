@@ -10,8 +10,12 @@ pub struct AppConfig {
 
 impl AppConfig {
     pub fn new() -> Result<Self, ConfigError> {
+        let logger = slog_scope::logger().new(o!("mod" => "config.rs", "loc" => "AppConfig::new()"));
+        debug!(logger, "Creating config");
         let mut ac = Config::default();
+        debug!(logger, "Merging `Settings.toml`");
         ac.merge(config::File::with_name("Settings")).context("Unable to read `Settings.toml`").unwrap();
+        debug!(logger, "Merging `APP_*` environment vars");
         ac.merge(Environment::with_prefix("APP"))?;
 
         ac.try_into()
